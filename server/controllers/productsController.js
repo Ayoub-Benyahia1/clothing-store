@@ -1,5 +1,19 @@
 import db from "../config/db.js";
 
+const allowedFields = [
+  "id",
+  "name",
+  "description",
+  "price",
+  "stock",
+  "category_id",
+  "brand",
+  "gender",
+  "material",
+  "images",
+  "created_at",
+];
+
 // CREATE PRODUCT
 export const createProduct = (req, res) => {
   const {
@@ -105,19 +119,6 @@ export const specificProductFields = (req, res) => {
       .json({ message: "At least one field is required to get product!" });
   }
   try {
-    const allowedFields = [
-      "id",
-      "name",
-      "description",
-      "price",
-      "stock",
-      "category_id",
-      "brand",
-      "gender",
-      "material",
-      "images",
-      "created_at",
-    ];
     const selectedFields = fields.filter((field) =>
       allowedFields.includes(field)
     );
@@ -251,7 +252,7 @@ export const filterProducts = async (req, res) => {
       (pageSize && offset) ||
       (!isNaN(parseInt(pageSize)) && !isNaN(parseInt(offset)))
     ) {
-      sql += " LIMIT ? OFFSET ?";
+      sql += " limit ? offset ?";
       values.push(pageSize, offset);
     }
 
@@ -268,6 +269,59 @@ export const filterProducts = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error", error });
   }
 };
+
+// GET PRODUCTS BY CATEGORY WITH PAGINATION
+export const getProductsByCategory = (req, res) => {
+  const { id } = req.params;
+  const { fields } = req.body;
+  const { limit, page } = req.query;
+
+  if (!Array.isArray(fields) || fields.length === 0) {
+    return res.status(400).json({
+      message: "At least one field is required to get products by category",
+    });
+  }
+
+  try {
+    const selectedFields = fields.filter(field => allowedFields.includes(field));
+
+    if (selectedFields.length === 0) {
+      return res.status(400).json({ message: "Invalid fields provided!" });
+    }
+
+    let sql = `SELECT ${selectedFields.join(", ")} FROM products WHERE category_id = ? ORDER BY created_at ASC`;
+    let values = [id];
+
+    if (limit && page) {
+      const parsedLimit = parseInt(limit);
+      const parsedPage = parseInt(page);
+
+      if (isNaN(parsedLimit) || isNaN(parsedPage) || parsedLimit <= 0 || parsedPage <= 0) {
+        return res.status(400).json({ message: "Invalid limit or page number" });
+      }
+
+      const offset = (parsedPage - 1) * parsedLimit;
+      sql += " LIMIT ? OFFSET ?";
+      values.push(parsedLimit, offset);
+    }
+
+    db.query(sql, values, (err, result) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ message: "Database error", error: err });
+      }
+      if (result.length === 0) {
+        return res.status(404).json({ message: "No products found in this category!" });
+      }
+      return res.status(200).json({ products: result });
+    });
+
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({ message: "Server error", error });
+  }
+};
+
 
 // DELETE PRODUCT
 export const deleteProduct = (req, res) => {
