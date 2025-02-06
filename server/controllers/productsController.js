@@ -340,16 +340,20 @@ export const searchForProductByName = (req, res) => {
   if (!name) {
     return res.status(400).json({ message: "Product name is required!" });
   }
-  const sql = "select * from products where name = ?";
-  db.query(sql, [name], (err, result) => {
-    if (err) {
-      return res.status(500).json({ message: "Database error: ", err });
-    }
-    if (result.length === 0) {
-      return res.status(404).json({ message: "Product name not found!" });
-    }
-    return res.status(200).json({ products: result });
-  });
+  try {
+    const sql = "select * from products where name = ?";
+    db.query(sql, [name], (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: "Database error: ", err });
+      }
+      if (result.length === 0) {
+        return res.status(404).json({ message: "Product name not found!" });
+      }
+      return res.status(200).json({ products: result });
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Server error: ", error });
+  }
 };
 
 // DELETE PRODUCT
@@ -363,6 +367,9 @@ export const deleteProduct = (req, res) => {
         return res
           .status(500)
           .json({ message: "Database error: ", error: err });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: "Product not found!" });
       }
       return res.status(200).json({ message: "Product deleted successfully!" });
     });
