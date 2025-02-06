@@ -283,21 +283,32 @@ export const getProductsByCategory = (req, res) => {
   }
 
   try {
-    const selectedFields = fields.filter(field => allowedFields.includes(field));
+    const selectedFields = fields.filter((field) =>
+      allowedFields.includes(field)
+    );
 
     if (selectedFields.length === 0) {
       return res.status(400).json({ message: "Invalid fields provided!" });
     }
 
-    let sql = `SELECT ${selectedFields.join(", ")} FROM products WHERE category_id = ? ORDER BY created_at ASC`;
+    let sql = `SELECT ${selectedFields.join(
+      ", "
+    )} FROM products WHERE category_id = ? ORDER BY created_at ASC`;
     let values = [id];
 
     if (limit && page) {
       const parsedLimit = parseInt(limit);
       const parsedPage = parseInt(page);
 
-      if (isNaN(parsedLimit) || isNaN(parsedPage) || parsedLimit <= 0 || parsedPage <= 0) {
-        return res.status(400).json({ message: "Invalid limit or page number" });
+      if (
+        isNaN(parsedLimit) ||
+        isNaN(parsedPage) ||
+        parsedLimit <= 0 ||
+        parsedPage <= 0
+      ) {
+        return res
+          .status(400)
+          .json({ message: "Invalid limit or page number" });
       }
 
       const offset = (parsedPage - 1) * parsedLimit;
@@ -311,17 +322,35 @@ export const getProductsByCategory = (req, res) => {
         return res.status(500).json({ message: "Database error", error: err });
       }
       if (result.length === 0) {
-        return res.status(404).json({ message: "No products found in this category!" });
+        return res
+          .status(404)
+          .json({ message: "No products found in this category!" });
       }
       return res.status(200).json({ products: result });
     });
-
   } catch (error) {
     console.error("Server error:", error);
     return res.status(500).json({ message: "Server error", error });
   }
 };
 
+// SEARCH FOR PRODUCT BY NAME
+export const searchForProductByName = (req, res) => {
+  const { name } = req.query;
+  if (!name) {
+    return res.status(400).json({ message: "Product name is required!" });
+  }
+  const sql = "select * from products where name = ?";
+  db.query(sql, [name], (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: "Database error: ", err });
+    }
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Product name not found!" });
+    }
+    return res.status(200).json({ products: result });
+  });
+};
 
 // DELETE PRODUCT
 export const deleteProduct = (req, res) => {
