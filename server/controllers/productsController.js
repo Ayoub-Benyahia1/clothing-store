@@ -50,7 +50,7 @@ export const createProduct = (req, res) => {
           .status(500)
           .json({ message: "Database error: ", error: err });
       }
-      return res.status(201).json({ message: "Product added successfullt" });
+      return res.status(201).json({ message: "Product added successfully" });
     });
   } catch (error) {
     return res.status(500).json({ message: "Server error: ", error });
@@ -263,7 +263,7 @@ export const filterProducts = async (req, res) => {
       if (results.length === 0) {
         return res.status(404).json({ message: "Products not found" });
       }
-      return res.status(200).json(results);
+      return res.status(200).json({ products: results });
     });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error", error });
