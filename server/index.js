@@ -2,6 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import authRoutes from "./routes/authRoutes.js";
 import categoriesRoutes from "./routes/categoriesRoutes.js";
 import productsRoutes from "./routes/productsRoutes.js";
@@ -17,7 +19,23 @@ import reviewsRoutes from "./routes/reviewsRoutes.js";
 dotenv.config();
 const app = express();
 
-app.use(cors({ origin: process.env.ORIGIN, credentials: true }));
+app.use(helmet());
+
+app.use(
+  cors({
+    origin: process.env.ORIGIN,
+    credentials: true,
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+// Rate Limiting
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 15 minutes
+  max: 200, // Increased limit
+  message: "Too many requests, please try again later",
+});
+app.use(limiter);
 app.use(express.json());
 app.use(cookieParser());
 
