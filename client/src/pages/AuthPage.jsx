@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { loginUser, registerUser } from "../redux/slices/authSlice";
 
 const AuthPage = ({ type }) => {
@@ -16,8 +17,10 @@ const AuthPage = ({ type }) => {
 
   const onSubmit = async (data) => {
     try {
-      type === "login" ? dispatch(loginUser(data)) : dispatch(registerUser({ id: 2, ...data}))
-      navigate("/dashboard");
+      type === "login"
+        ? dispatch(loginUser(data))
+        : dispatch(registerUser({ id: uuidv4(), ...data }));
+      navigate("/sign-in");
     } catch (error) {
       setErrorMessage(error.response?.data?.message || "Authentication failed");
     }
@@ -27,7 +30,7 @@ const AuthPage = ({ type }) => {
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded shadow-lg max-w-md w-full">
         <h2 className="text-2xl font-bold mb-4">
-          {type === "login" ? "Login" : "Register"}
+          {type === "login" ? "Sign in" : "Sign up"}
         </h2>
         {errorMessage && <p className="text-red-500">{errorMessage}</p>}
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -63,6 +66,21 @@ const AuthPage = ({ type }) => {
             {type === "login" ? "Login" : "Register"}
           </button>
         </form>
+        {type === "login" ? (
+          <span>
+            you don't have an account?{" "}
+            <Link to="/sign-up" className="text-blue-500 underline">
+              Sign up
+            </Link>
+          </span>
+        ) : (
+          <span>
+            you already have an account?{" "}
+            <Link to="/sign-in" className="text-blue-500 underline">
+              Sign in
+            </Link>
+          </span>
+        )}
       </div>
     </div>
   );
@@ -70,4 +88,3 @@ const AuthPage = ({ type }) => {
 
 export const Login = () => <AuthPage type="login" />;
 export const Register = () => <AuthPage type="register" />;
-

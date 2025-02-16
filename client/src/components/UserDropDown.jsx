@@ -9,9 +9,21 @@ import {
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "@/redux/slices/authSlice";
 
-function UserDropDown({ isAuthenticated }) {
+function UserDropDown({ isAuthenticated, user }) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    const result = await dispatch(logoutUser());
+    if (logoutUser.fulfilled.match(result)) {
+      return navigate("/");
+    } else {
+      console.error("Erreur lors de la déconnexion :", result.error.message);
+    }
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -35,7 +47,7 @@ function UserDropDown({ isAuthenticated }) {
         </DropdownMenuContent>
       ) : (
         <DropdownMenuContent>
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuLabel>Welcome {user.name}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="cursor-pointer">
             Profile
@@ -43,7 +55,7 @@ function UserDropDown({ isAuthenticated }) {
           <DropdownMenuItem className="cursor-pointer">
             My orders
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
+          <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
             Log out
           </DropdownMenuItem>
         </DropdownMenuContent>
