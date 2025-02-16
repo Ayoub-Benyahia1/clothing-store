@@ -34,9 +34,7 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {["Dress", "Jacket", "T-Shirt", "Jeans", "Sneakers", "Hat"].map(
               (product, index) => (
-                <Link to={`/${product}`}>
-                  <ProductCard product={product} index={index} />
-                </Link>
+                <ProductCard product={product} index={index} />
               )
             )}
           </div>
