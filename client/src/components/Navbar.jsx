@@ -30,14 +30,14 @@ const Navbar = () => {
 
         {/* Desktop Navigation & Icons */}
         <div className="hidden md:flex items-center space-x-6">
+          <Link to="/" className="text-gray-700 hover:text-gray-900">
+            Home
+          </Link>
           <Link to="/shop" className="text-gray-700 hover:text-gray-900">
             Shop
           </Link>
           <Link to="/categories" className="text-gray-700 hover:text-gray-900">
             Categories
-          </Link>
-          <Link to="/contact" className="text-gray-700 hover:text-gray-900">
-            Contact
           </Link>
           <Button variant="ghost">
             <div className="relative">

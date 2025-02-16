@@ -7,6 +7,7 @@ import { Login, Register } from "./pages/AuthPage";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const refresh = import.meta.env.VITE_INTERVAL_CHECKAUTH;
 
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/sign-in" element={<Login />} />
           <Route path="/sign-up" element={<Register />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Footer />
     </Router>
