@@ -57,12 +57,19 @@ export const login = async (req, res) => {
       const refreshToken = jwt.sign(
         { id: user.id },
         process.env.JWT_REFRESH_SECRET,
-        { expiresIn: "2d" }
+        { expiresIn: "7d" }
       );
-      res.cookie("refreshToken", refreshToken, {
+      res.cookie("access_token", accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "Strict",
+        maxAge: 60000 * 15,
+      });
+      res.cookie("refresh_token", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "Strict",
+        maxAge: 60000 * 60 * 24 * 7,
       });
       const { password: userPassword, id, ...userData } = user;
       return res
@@ -77,9 +84,38 @@ export const login = async (req, res) => {
 // LOGOUT
 export const logout = (req, res) => {
   try {
-    res.clearCookie("refreshToken");
+    res.clearCookie("access_token");
+    res.clearCookie("refresh_token");
     res.status(200).json({ message: "Logged out successfully!" });
   } catch (error) {
     return res.status(500).json({ message: "Server error: ", error });
   }
+};
+
+// REFRESH TOKEN
+export const refreshToken = (req, res) => {
+  const refreshToken = req.cookies.refresh_token;
+
+  if (!refreshToken) return res.status(401).json({ message: "Unauthorized" });
+
+  jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
+    if (err) {
+      console.error("Refresh token invalid:", err);
+      return res.status(403).json({ message: "Forbidden" });
+    }
+    const accessToken = jwt.sign(
+      { name: user.name, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" }
+    );
+
+    res.cookie("access_token", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 60000 * 15,
+    });
+
+    res.json({ accessToken });
+  });
 };

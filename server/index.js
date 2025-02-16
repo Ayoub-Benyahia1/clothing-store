@@ -31,8 +31,8 @@ app.use(
 );
 // Rate Limiting
 const limiter = rateLimit({
-  windowMs: 10 * 60 * 1000, // 15 minutes
-  max: 200, // Increased limit
+  windowMs: 10 * 60 * 1000,
+  max: 200,
   message: "Too many requests, please try again later",
 });
 app.use(limiter);
