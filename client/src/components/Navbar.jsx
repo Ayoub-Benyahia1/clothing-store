@@ -4,8 +4,11 @@ import { Input } from "../components/ui/input";
 import { Menu, ShoppingCart, User } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
 import { Link } from "react-router-dom";
+import UserDropDown from "./UserDropDown";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const [search, setSearch] = useState("");
 
   return (
@@ -38,9 +41,7 @@ const Navbar = () => {
           <Button variant="ghost">
             <ShoppingCart className="w-5 h-5" />
           </Button>
-          <Button variant="ghost">
-            <User className="w-5 h-5" />
-          </Button>
+          <UserDropDown isAuthenticated={isAuthenticated}/>
         </div>
 
         {/* Mobile Menu */}
@@ -65,9 +66,7 @@ const Navbar = () => {
                 <Button variant="ghost">
                   <ShoppingCart className="w-5 h-5" />
                 </Button>
-                <Button variant="ghost">
-                  <User className="w-5 h-5" />
-                </Button>
+                <UserDropDown />
               </div>
             </SheetContent>
           </Sheet>
@@ -78,4 +77,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

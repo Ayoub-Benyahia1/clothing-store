@@ -28,8 +28,8 @@ const App = () => {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route element={<RedirectIfAuthenticated />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/sign-in" element={<Login />} />
+          <Route path="/sign-up" element={<Register />} />
         </Route>
       </Routes>
       <Footer />
