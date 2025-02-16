@@ -1,3 +1,4 @@
+import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
@@ -30,7 +31,15 @@ const Home = () => {
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
             Featured Clothing
           </h2>
-          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {["Dress", "Jacket", "T-Shirt", "Jeans", "Sneakers", "Hat"].map(
+              (product, index) => (
+                <Link to={`/${product}`}>
+                  <ProductCard product={product} index={index} />
+                </Link>
+              )
+            )}
+          </div>
         </section>
 
         {/* Categories Section */}
