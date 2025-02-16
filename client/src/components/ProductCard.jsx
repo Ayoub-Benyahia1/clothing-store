@@ -3,9 +3,9 @@ import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 
-function ProductCard({ product, index }) {
+function ProductCard({ product }) {
   return (
-    <Card key={index} className="p-3">
+    <Card className="p-3">
       <Link to={`/${product}`}>
         <CardContent className="p-0">
           <div className="h-56 bg-gray-200 rounded-lg mb-4"></div>

@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
 import { Link } from "react-router-dom";
 import UserDropDown from "./UserDropDown";
 import { useSelector } from "react-redux";
+import CartBadge from "./CartBadge";
 
 const Navbar = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -39,9 +40,12 @@ const Navbar = () => {
             Contact
           </Link>
           <Button variant="ghost">
-            <ShoppingCart className="w-5 h-5" />
+            <div className="relative">
+              <ShoppingCart className="w-5 h-5" />
+              <CartBadge />
+            </div>
           </Button>
-          <UserDropDown isAuthenticated={isAuthenticated}/>
+          <UserDropDown isAuthenticated={isAuthenticated} />
         </div>
 
         {/* Mobile Menu */}
@@ -64,7 +68,10 @@ const Navbar = () => {
               </Link>
               <div className="flex mt-4 space-x-4">
                 <Button variant="ghost">
-                  <ShoppingCart className="w-5 h-5" />
+                  <div className="relative">
+                    <ShoppingCart className="w-5 h-5" />
+                    <CartBadge />
+                  </div>
                 </Button>
                 <UserDropDown />
               </div>
