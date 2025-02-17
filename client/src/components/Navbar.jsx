@@ -11,7 +11,6 @@ import CartBadge from "./CartBadge";
 const Navbar = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const [search, setSearch] = useState("");
-  console.log(isAuthenticated, user);
 
   return (
     <nav className="px-2 md:px-10 bg-white shadow-md fixed w-full z-50">

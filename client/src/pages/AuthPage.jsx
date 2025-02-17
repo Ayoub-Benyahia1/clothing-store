@@ -1,9 +1,10 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { loginUser, registerUser } from "../redux/slices/authSlice";
+import { useToast } from "@/hooks/use-toast";
 
 const AuthPage = ({ type }) => {
   const {
@@ -14,15 +15,43 @@ const AuthPage = ({ type }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { toast } = useToast();
 
   const onSubmit = async (data) => {
-    try {
-      type === "login"
-        ? dispatch(loginUser(data))
-        : dispatch(registerUser({ id: uuidv4(), ...data }));
-      navigate("/sign-in");
-    } catch (error) {
-      setErrorMessage(error.response?.data?.message || "Authentication failed");
+    if (type === "login") {
+      try {
+        const result = await dispatch(loginUser(data)).unwrap();
+        toast({
+          variant: "success",
+          title: "Success!",
+          description: "You have successfully sign in!",
+        });
+        navigate("/dashboard");
+      } catch (err) {
+        toast({
+          variant: "destructive",
+          title: "Sign in Failed",
+          description: err.message || "Something went wrong",
+        });
+      }
+    } else {
+      try {
+        const result = await dispatch(
+          registerUser({ id: uuidv4(), ...data })
+        ).unwrap();
+        toast({
+          variant: "success",
+          title: "Success!",
+          description: "You have successfully sign up!",
+        });
+        navigate("/sign-in");
+      } catch (err) {
+        toast({
+          variant: "destructive",
+          title: "Sign up Failed",
+          description: err.message || "Something went wrong",
+        });
+      }
     }
   };
 
@@ -38,7 +67,9 @@ const AuthPage = ({ type }) => {
             <input
               {...register("email", { required: "Email is required" })}
               placeholder="Email"
-              className="border p-2 w-full mb-2"
+              className={`${
+                errors.email && "border-red-500"
+              } border p-2 w-full mb-2`}
             />
           )}
           {errors.email && (
@@ -46,17 +77,27 @@ const AuthPage = ({ type }) => {
           )}
 
           <input
-            {...register("name", { required: "Name is required" })}
+            {...register("name", {
+              required: "Name is required",
+              minLength: { value: 5, message: "at least 5 characters" },
+            })}
             placeholder="Full Name"
-            className="border p-2 w-full mb-2"
+            className={`${
+              errors.name && "border-red-500"
+            } border p-2 w-full mb-2`}
           />
           {errors.name && <p className="text-red-500">{errors.name.message}</p>}
 
           <input
-            {...register("password", { required: "Password is required" })}
+            {...register("password", {
+              required: "Password is required",
+              minLength: { value: 8, message: "at least 8 characters" },
+            })}
             type="password"
             placeholder="Password"
-            className="border p-2 w-full mb-2"
+            className={`${
+              errors.password && "border-red-500"
+            } border p-2 w-full mb-2`}
           />
           {errors.password && (
             <p className="text-red-500">{errors.password.message}</p>

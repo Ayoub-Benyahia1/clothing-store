@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import NotFoundPage from "./pages/NotFoundPage";
+import { Toaster } from "./components/Toaster";
 
 const refresh = import.meta.env.VITE_INTERVAL_CHECKAUTH;
 
@@ -35,6 +36,7 @@ const App = () => {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Footer />
+      <Toaster />
     </Router>
   );
 };
