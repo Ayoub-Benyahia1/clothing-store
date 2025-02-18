@@ -50,12 +50,12 @@ export const login = async (req, res) => {
         return res.status(401).json({ message: "Invalid name or password!" });
       }
       const accessToken = jwt.sign(
-        { id: user.id, role: user.role },
+        { name: user.name, role: user.role },
         process.env.JWT_SECRET,
         { expiresIn: "15m" }
       );
       const refreshToken = jwt.sign(
-        { id: user.id },
+        { name: user.name },
         process.env.JWT_REFRESH_SECRET,
         { expiresIn: "7d" }
       );
@@ -115,7 +115,7 @@ export const refreshToken = (req, res) => {
       sameSite: "Strict",
       maxAge: 60000 * 15,
     });
-
-    res.json({ accessToken });
+    const { name } = user;
+    res.json({ accessToken, name });
   });
 };

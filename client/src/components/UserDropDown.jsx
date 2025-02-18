@@ -24,6 +24,7 @@ function UserDropDown({ isAuthenticated, user }) {
       console.error("Erreur lors de la déconnexion :", result.error.message);
     }
   };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -47,7 +48,7 @@ function UserDropDown({ isAuthenticated, user }) {
         </DropdownMenuContent>
       ) : (
         <DropdownMenuContent>
-          <DropdownMenuLabel>Welcome {user.name}</DropdownMenuLabel>
+          <DropdownMenuLabel>Welcome {user?.name || user}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="cursor-pointer">
             Profile

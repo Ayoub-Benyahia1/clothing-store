@@ -61,7 +61,7 @@ export const createProduct = (req, res) => {
 export const allProducts = (req, res) => {
   const { page, limit } = req.query;
   try {
-    let sql = "select * from products";
+    let sql = "select * from products order by created_at desc";
     let values = [];
     if (page && limit) {
       let offset = (page - 1) * limit;
@@ -110,7 +110,7 @@ export const getProductById = (req, res) => {
 
 // GET SPECIFIC PRODUCT FIELDS
 export const specificProductFields = (req, res) => {
-  const { fields } = req.body;
+  const { fields } = req.query;
   const { limit } = req.query;
 
   if (fields.length === 0 || !Array.isArray(fields)) {
@@ -206,6 +206,8 @@ export const filterProducts = async (req, res) => {
     page,
     limit,
   } = req.query;
+  console.log(req.query);
+  
 
   try {
     let sql = "select * from products where 1";

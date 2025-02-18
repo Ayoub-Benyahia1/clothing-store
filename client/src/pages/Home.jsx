@@ -1,10 +1,23 @@
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { allProducts, specificFieldsLimit } from "@/redux/slices/productsSlice";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Home = () => {
+  const dispatch = useDispatch();
+  const { products } = useSelector((state) => state.products);
+  const fields = ["id", "name", "price"]
+  useEffect(() => {
+    const fetchProducts = async () => {
+      await dispatch(specificFieldsLimit(fields));
+    };
+    fetchProducts();
+  }, [dispatch]);
+
   return (
     <div className="container mx-auto px-4 flex justify-center">
       <div className="max-w-5xl w-full p-8">
@@ -21,9 +34,9 @@ const Home = () => {
           <p className="text-gray-600 mb-6">
             Upgrade your wardrobe with the best styles.
           </p>
-          <a to="/shop">
+          <Link to="/shop">
             <Button className="px-6 py-3">Shop Now</Button>
-          </a>
+          </Link>
         </section>
 
         {/* Featured Products */}
@@ -32,13 +45,11 @@ const Home = () => {
             Featured Clothing
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {["Dress", "Jacket", "T-Shirt", "Jeans", "Sneakers", "Hat"].map(
-              (product, index) => (
-                <div key={index}>
-                  <ProductCard product={product} />
-                </div>
-              )
-            )}
+            {products?.map((product) => (
+              <div key={product.id}>
+                <ProductCard product={product} />
+              </div>
+            ))}
           </div>
         </section>
 
