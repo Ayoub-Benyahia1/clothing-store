@@ -34,7 +34,7 @@ const Home = () => {
           <p className="text-gray-600 mb-6">
             Upgrade your wardrobe with the best styles.
           </p>
-          <Link to="/shop">
+          <Link to="/all-products">
             <Button className="px-6 py-3">Shop Now</Button>
           </Link>
         </section>

@@ -33,11 +33,8 @@ const Navbar = () => {
           <Link to="/" className="text-gray-700 hover:text-gray-900">
             Home
           </Link>
-          <Link to="/shop" className="text-gray-700 hover:text-gray-900">
-            Shop
-          </Link>
-          <Link to="/categories" className="text-gray-700 hover:text-gray-900">
-            Categories
+          <Link to="/all-products" className="text-gray-700 hover:text-gray-900">
+            All products
           </Link>
           <Button variant="ghost">
             <div className="relative">
