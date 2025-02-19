@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import AllProducts from "@/components/AllProducts";
 import Scroll from "@/components/Scroll";
 import SortSelect from "@/components/SortSelect";
-import { filterAndSortByOrder } from "@/redux/slices/productsSlice";
+import { filterAndSort } from "@/redux/slices/productsSlice";
 
 function Shop() {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const [queryParams, setQueryParams] = useState({});
+  // const filters = useSelector((state) => state.products.filters);
+
+  // const handleUpdateFilters = (newFilters) => {
+  //   dispatch(updateFilters(newFilters));
+  // };
 
   // Updates local `queryParams` state and URL parameters
   const updateFilters = (newFilters) => {
@@ -48,7 +53,7 @@ function Shop() {
 
   // Run filtering + sorting query every time settings change
   useEffect(() => {
-    dispatch(filterAndSortByOrder(queryParams));
+    dispatch(filterAndSort(queryParams));
   }, [queryParams, dispatch]);
 
   return (

@@ -195,80 +195,57 @@ export const updateProduct = (req, res) => {
 
 // FILTER PRODUCTS
 export const filterProducts = async (req, res) => {
-  const {
-    category,
-    price_min,
-    price_max,
-    brand,
-    gender,
-    sort_by,
-    order,
-    page,
-    limit,
-  } = req.query;
+  const { category, price_min, price_max, brand, gender, sort_by, order, page, limit } = req.query;
 
   try {
-    let sql = "select * from products where 1";
+    let sql = "SELECT * FROM products WHERE 1";
     const values = [];
 
-    if (category) {
-      sql += " and category_id = ?";
-      values.push(category);
-    }
+    const addCondition = (field, param) => {
+      if (param) {
+        const paramArray = Array.isArray(param) ? param : param.split(",");
+        const placeholders = paramArray.map(() => "?").join(",");
+        sql += ` AND ${field} IN (${placeholders})`;
+        values.push(...paramArray);
+      }
+    };
+
+    addCondition("category_id", category);
+    addCondition("brand", brand);
+    addCondition("gender", gender);
+
     if (price_min) {
-      sql += " and price >= ?";
+      sql += " AND price >= ?";
       values.push(parseFloat(price_min));
     }
     if (price_max) {
-      sql += " and price <= ?";
+      sql += " AND price <= ? order by price asc";
       values.push(parseFloat(price_max));
     }
-    if (brand) {
-      sql += " and brand = ?";
-      values.push(brand);
-    }
-    if (gender) {
-      sql += " and gender = ?";
-      values.push(gender);
-    }
 
-    // Sorting
-    const validSortFields = ["price", "rating", "created_at"];
-    const validOrder = ["ASC", "DESC"];
-
-    if (sort_by && validSortFields.includes(sort_by)) {
-      const orderBy = validOrder.includes(order?.toUpperCase())
-        ? order.toUpperCase()
-        : "ASC";
-      sql += ` ORDER BY ${sort_by} ${orderBy}`;
-    }
-
-    // Pagination
-    const pageNumber = parseInt(page);
-    const pageSize = parseInt(limit);
-    const offset = (pageNumber - 1) * pageSize;
-
-    if (
-      (pageSize && offset) ||
-      (!isNaN(parseInt(pageSize)) && !isNaN(parseInt(offset)))
-    ) {
-      sql += " limit ? offset ?";
-      values.push(pageSize, offset);
-    }
-
-    db.query(sql, values, async (err, results) => {
-      if (err) {
-        return res.status(500).json({ message: "Database error", error: err });
+    if (sort_by) {
+      const validSortFields = ["price", "rating", "created_at"];
+      const validOrder = ["ASC", "DESC"];
+      if (validSortFields.includes(sort_by)) {
+        sql += ` ORDER BY ${sort_by} ${validOrder.includes(order?.toUpperCase()) ? order.toUpperCase() : "ASC"}`;
       }
-      if (results.length === 0) {
-        return res.status(404).json({ message: "Products not found" });
-      }
+    }
+
+    if (page && limit) {
+      sql += " LIMIT ? OFFSET ?";
+      values.push(parseInt(limit), (parseInt(page) - 1) * parseInt(limit));
+    }
+
+    db.query(sql, values, (err, results) => {
+      if (err) return res.status(500).json({ message: "Database error", error: err });
+      if (results.length === 0) return res.status(404).json({ message: "Products not found" });
       return res.status(200).json({ products: results });
     });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error", error });
   }
 };
+
 
 // GET PRODUCTS BY CATEGORY WITH PAGINATION
 export const getProductsByCategory = (req, res) => {

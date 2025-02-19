@@ -1,7 +1,7 @@
 import React from "react";
 import AccordionFilter from "./AccordionFilter";
 
-function Filter() {
+function Filter({ updateFilters }) {
   const labels = [
     {
       name: "Gender",
@@ -34,6 +34,7 @@ function Filter() {
           name={label.name}
           data={label.data}
           filterKey={label.filterKey}
+          updateFilters={updateFilters}
         />
       ))}
     </div>
