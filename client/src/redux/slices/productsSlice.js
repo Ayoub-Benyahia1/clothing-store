@@ -33,15 +33,15 @@ export const specificFieldsLimit = createAsyncThunk(
   }
 );
 
-// GET SORT BY & ORDER
-export const sortByOrder = createAsyncThunk(
-  "products/sortByOrder",
+// GET FILTER AND SORT BY ORDER
+export const filterAndSortByOrder = createAsyncThunk(
+  "products/filterAndSortByOrder",
   async (query, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${backendUrl}/products/filter`, {
         params: query,
       });
-      
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.error);
@@ -52,7 +52,7 @@ export const sortByOrder = createAsyncThunk(
 const productSlice = createSlice({
   name: "products",
   initialState: {
-    products: null,
+    products: [],
     loading: false,
     error: null,
   },
@@ -83,17 +83,18 @@ const productSlice = createSlice({
         state.loading = false;
         state.error = action.payload.message;
       })
-      .addCase(sortByOrder.pending, (state) => {
+      .addCase(filterAndSortByOrder.pending, (state) => {
         state.loading = true;
       })
-      .addCase(sortByOrder.fulfilled, (state, action) => {
+      .addCase(filterAndSortByOrder.fulfilled, (state, action) => {
         state.loading = false;
         state.products = action.payload.products;
         state.error = null;
       })
-      .addCase(sortByOrder.rejected, (state, action) => {
+      .addCase(filterAndSortByOrder.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload?.message;
+        state.products = [];
+        state.error = action.payload ;
       });
   },
 });

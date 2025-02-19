@@ -1,15 +1,27 @@
 import React, { useState } from "react";
 import { Checkbox } from "./ui/checkbox";
+import { useSearchParams } from "react-router-dom";
 
-function CheckBoxFilter({ dataList }) {
+function CheckBoxFilter({ dataList, filterKey }) {
   const [selectedValues, setSelectedValues] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleCheckboxChange = (checked, value) => {
-    setSelectedValues((prev) =>
-      checked ? [...prev, value] : prev.filter((item) => item !== value)
-    );
+    let updatedValues = checked
+      ? [...selectedValues, value]
+      : selectedValues.filter((item) => item !== value);
+
+    setSelectedValues(updatedValues);
+
+    // Update URL parameters
+    const params = new URLSearchParams(searchParams);
+    if (updatedValues.length > 0) {
+      params.set(filterKey, updatedValues.join(","));
+    } else {
+      params.delete(filterKey);
+    }
+    setSearchParams(params);
   };
-  console.log(selectedValues);
 
   return (
     <div>

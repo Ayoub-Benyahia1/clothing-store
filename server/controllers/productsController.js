@@ -206,8 +206,6 @@ export const filterProducts = async (req, res) => {
     page,
     limit,
   } = req.query;
-  console.log(req.query);
-  
 
   try {
     let sql = "select * from products where 1";

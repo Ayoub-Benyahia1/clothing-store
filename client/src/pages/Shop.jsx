@@ -1,48 +1,61 @@
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import AllProducts from "@/components/AllProducts";
 import Scroll from "@/components/Scroll";
 import SortSelect from "@/components/SortSelect";
-import { allProducts, sortByOrder } from "@/redux/slices/productsSlice";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import { filterAndSortByOrder } from "@/redux/slices/productsSlice";
 
 function Shop() {
   const dispatch = useDispatch();
-  const { products } = useSelector((state) => state.products);
-  const [sortType, setSortType] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
+  const [queryParams, setQueryParams] = useState({});
 
-  const handleSortChange = (value) => {
-    const urlParams = new URLSearchParams(value);
-    const queryParams = Object.fromEntries(urlParams.entries());
+  // Updates local `queryParams` state and URL parameters
+  const updateFilters = (newFilters) => {
+    const updatedParams = { ...queryParams, ...newFilters };
 
-    setSearchParams(queryParams);
-    setSortType(queryParams);
+    // Removing empty values
+    Object.keys(updatedParams).forEach((key) => {
+      if (!updatedParams[key]) {
+        delete updatedParams[key];
+      }
+    });
+
+    setQueryParams(updatedParams);
+    setSearchParams(updatedParams);
   };
 
-  useEffect(() => {
-    dispatch(allProducts());
-  }, [dispatch]);
+  // Sorting management
+  const handleSortChange = (value) => {
+    const params = new URLSearchParams(value);
+    const sort_by = params.get("sort_by");
+    const order = params.get("order");
 
-  useEffect(() => {
-    if (sortType) {
-      dispatch(sortByOrder(sortType));
-    }
-  }, [sortType, dispatch]);
+    updateFilters({ sort_by, order });
+  };
 
-  // Read sort parameters from URL on load
+  // Converts the object into string
+  const queryString = Object.entries(queryParams)
+    .map(([key, value]) => `${key}=${value}`)
+    .join("&");
+
+  // Read URL parameters on load
   useEffect(() => {
-    const params = searchParams.toString();
-    if (params) {
-      setSortType(`?${params}`);
-    }
+    const params = Object.fromEntries(searchParams.entries());
+    setQueryParams(params);
   }, [searchParams]);
+
+  // Run filtering + sorting query every time settings change
+  useEffect(() => {
+    dispatch(filterAndSortByOrder(queryParams));
+  }, [queryParams, dispatch]);
 
   return (
     <section className="container mx-auto px-2 md:px-8 grid md:grid-flow-col grid-cols-1 md:grid-cols-4 md:grid-rows-3 md:gap-4 pt-20">
       <div className="col-span-1 md:col-span-1 md:row-span-12 relative">
         <div className="md:sticky md:top-20">
-          <Scroll />
+          <Scroll updateFilters={updateFilters} />
         </div>
       </div>
       <div className="p-2 col-span-1 md:col-span-4 row-span-11">
@@ -50,10 +63,10 @@ function Shop() {
           <div className="flex justify-end">
             <SortSelect
               onSortChange={handleSortChange}
-              selectedSort={sortType}
+              queryString={queryString}
             />
           </div>
-          <AllProducts products={products} />
+          <AllProducts />
         </div>
       </div>
     </section>
