@@ -219,7 +219,7 @@ export const filterProducts = async (req, res) => {
       values.push(parseFloat(price_min));
     }
     if (price_max) {
-      sql += " AND price <= ? order by price asc";
+      sql += " AND price <= ?";
       values.push(parseFloat(price_max));
     }
 
