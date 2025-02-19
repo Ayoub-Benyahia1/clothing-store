@@ -10,7 +10,6 @@ function Filter({ updateFilters }) {
     },
     {
       name: "Price",
-      data: ["<100", "101><200", "201><400", "+400"],
       filterKey: "price",
     },
     {
@@ -31,8 +30,8 @@ function Filter({ updateFilters }) {
       {labels.map((label, index) => (
         <AccordionFilter
           key={index}
-          name={label.name}
-          data={label.data}
+          name={label?.name}
+          data={label?.data}
           filterKey={label.filterKey}
           updateFilters={updateFilters}
         />

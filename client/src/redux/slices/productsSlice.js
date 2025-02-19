@@ -53,7 +53,6 @@ const productSlice = createSlice({
   name: "products",
   initialState: {
     products: [],
-    filters: {},
     loading: false,
     error: null,
   },
