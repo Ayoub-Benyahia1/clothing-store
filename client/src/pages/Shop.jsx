@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import AllProducts from "@/components/AllProducts";
 import Scroll from "@/components/Scroll";
@@ -10,11 +10,6 @@ function Shop() {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const [queryParams, setQueryParams] = useState({});
-  // const filters = useSelector((state) => state.products.filters);
-
-  // const handleUpdateFilters = (newFilters) => {
-  //   dispatch(updateFilters(newFilters));
-  // };
 
   // Updates local `queryParams` state and URL parameters
   const updateFilters = (newFilters) => {
