@@ -49,6 +49,19 @@ export const filterAndSort = createAsyncThunk(
   }
 );
 
+// GET PRODUCT BY ID
+export const productById = createAsyncThunk(
+  "products/getProductById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${backendUrl}/products/${id}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.message);
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: "products",
   initialState: {
@@ -92,6 +105,19 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(filterAndSort.rejected, (state, action) => {
+        state.loading = false;
+        state.products = [];
+        state.error = action.payload;
+      })
+      .addCase(productById.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(productById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products = action.payload.products;
+        state.error = null;
+      })
+      .addCase(productById.rejected, (state, action) => {
         state.loading = false;
         state.products = [];
         state.error = action.payload;

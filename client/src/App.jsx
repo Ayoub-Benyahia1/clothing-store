@@ -10,6 +10,7 @@ import Footer from "./components/Footer";
 import NotFoundPage from "./pages/NotFoundPage";
 import { Toaster } from "./components/Toaster";
 import Shop from "./pages/Shop";
+import ProductDetails from "./pages/ProductDetails";
 
 const refresh = import.meta.env.VITE_INTERVAL_CHECKAUTH;
 
@@ -31,6 +32,7 @@ const App = () => {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route exact path="/all-products" element={<Shop />} />
+        <Route exact path="/product/:name/:id" element={<ProductDetails />} />
         <Route element={<RedirectIfAuthenticated />}>
           <Route path="/sign-in" element={<Login />} />
           <Route path="/sign-up" element={<Register />} />
