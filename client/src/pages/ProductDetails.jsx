@@ -16,7 +16,7 @@ const ProductDetails = () => {
   useEffect(() => {
     const getById = async () => {
       await dispatch(productById(id));
-      setSelectedImage(products[0].images[0]);
+      setSelectedImage(products[0]?.images[0]);
     };
     getById();
   }, [dispatch]);
@@ -31,7 +31,7 @@ const ProductDetails = () => {
         <div className="flex flex-col gap-4">
           <img
             src={selectedImage}
-            alt={products[0].name}
+            alt={products[0]?.name}
             className="w-full h-96 object-cover rounded-lg shadow-lg"
           />
           <div className="flex gap-2">
@@ -50,20 +50,20 @@ const ProductDetails = () => {
         </div>
 
         <div className="flex flex-col gap-6">
-          <h1 className="text-3xl font-bold">{products[0].name}</h1>
-          <p className="text-gray-700">{products[0].description}</p>
+          <h1 className="text-3xl font-bold">{products[0]?.name}</h1>
+          <p className="text-gray-700">{products[0]?.description}</p>
           <div className="flex items-center gap-2">
             <span className="text-2xl font-semibold text-blue-500">
-              ${products[0].price}
+              ${products[0]?.price}
             </span>
             <div className="flex items-center gap-1 text-yellow-500">
               <StarIcon className="w-5 h-5" />
-              <span>{products[0].rating}</span>
+              <span>{products[0]?.rating}</span>
             </div>
           </div>
           <p className="text-sm text-gray-500">
-            {products[0].stock > 0
-              ? `En stock (${products[0].stock} disponibles)`
+            {products[0]?.stock > 0
+              ? `En stock (${products[0]?.stock} disponibles)`
               : "Rupture de stock"}
           </p>
 
@@ -81,7 +81,7 @@ const ProductDetails = () => {
 
           <Button
             className="w-full flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
-            disabled={products[0].stock === 0}
+            disabled={products[0]?.stock === 0}
           >
             <ShoppingCartIcon className="w-5 h-5" />
             Ajouter au panier
