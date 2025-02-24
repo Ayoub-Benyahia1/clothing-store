@@ -3,7 +3,7 @@ import { createColor, deleteColor, getAllColors, updateColor } from "../controll
 
 const router = express.Router();
 
-router.post("/create-color", createColor);
+router.post("/add-color", createColor);
 router.get("/all-colors", getAllColors);
 router.patch("/update-color", updateColor);
 router.delete("/:id", deleteColor);

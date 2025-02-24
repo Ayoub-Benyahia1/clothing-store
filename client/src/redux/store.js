@@ -3,6 +3,7 @@ import authReducer from "./slices/authSlice";
 import productReducer from "./slices/productsSlice";
 import cartReducer  from "./slices/cartSlice"
 import categoryReducer  from "./slices/categorySlice"
+import colorReducer  from "./slices/colorSlice"
 
 const loadCartState = () => {
   try {
@@ -20,6 +21,7 @@ export const store = configureStore({
     products: productReducer,
     cart: cartReducer,
     categories: categoryReducer,
+    colors: colorReducer,
   },
   preloadedState: {
     cart: { items: loadCartState() }, // Restaurer le panier dans Redux au démarrage
