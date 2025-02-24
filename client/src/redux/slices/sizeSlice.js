@@ -4,15 +4,12 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-// CREATE CATEGORY
-export const addCategory = createAsyncThunk(
-  "category/addCategory",
+// CREATE SIZE
+export const addSize = createAsyncThunk(
+  "size/addSize",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${backendUrl}/categories/add-category`,
-        data
-      );
+      const response = await axios.post(`${backendUrl}/sizes/add-size`, data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -20,14 +17,12 @@ export const addCategory = createAsyncThunk(
   }
 );
 
-// GET ALL CATEGORY
-export const allCategories = createAsyncThunk(
-  "category/allCategories",
+// GET ALL SIZES
+export const allSizes = createAsyncThunk(
+  "size/allSizes",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${backendUrl}/categories/all-categories`
-      );
+      const response = await axios.get(`${backendUrl}/sizes/all-sizes`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -35,13 +30,13 @@ export const allCategories = createAsyncThunk(
   }
 );
 
-// UPDATE CATEGORY
-export const updateCategory = createAsyncThunk(
-  "category/updateCategory",
+// UPDATE SIZE
+export const updateSize = createAsyncThunk(
+  "size/updateSize",
   async (data, { rejectWithValue }) => {
     try {
       const response = await axios.patch(
-        `${backendUrl}/categories/update-category`,
+        `${backendUrl}/sizes/update-size`,
         data
       );
       return response.data;
@@ -51,14 +46,12 @@ export const updateCategory = createAsyncThunk(
   }
 );
 
-// DELETE CATEGORY
-export const deleteCategory = createAsyncThunk(
-  "category/deleteCategory",
+// DELETE SIZE
+export const deleteSize = createAsyncThunk(
+  "size/deleteSize",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(
-        `${backendUrl}/categories/delete-category/${id}`
-      );
+      const response = await axios.delete(`${backendUrl}/sizes/${id}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -66,65 +59,65 @@ export const deleteCategory = createAsyncThunk(
   }
 );
 
-const categorySlice = createSlice({
-  name: "categories",
+const sizeSlice = createSlice({
+  name: "sizes",
   initialState: {
-    categories: [],
+    sizes: [],
     loading: false,
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(addCategory.pending, (state) => {
+      .addCase(addSize.pending, (state) => {
         state.loading = true;
       })
-      .addCase(addCategory.fulfilled, (state, action) => {
+      .addCase(addSize.fulfilled, (state, action) => {
         state.loading = false;
-        state.categories = action.payload.categories;
+        state.sizes = action.payload.sizes;
         state.error = null;
       })
-      .addCase(addCategory.rejected, (state, action) => {
+      .addCase(addSize.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
       })
-      .addCase(allCategories.pending, (state) => {
+      .addCase(allSizes.pending, (state) => {
         state.loading = true;
       })
-      .addCase(allCategories.fulfilled, (state, action) => {
+      .addCase(allSizes.fulfilled, (state, action) => {
         state.loading = false;
-        state.categories = action.payload.categories;
+        state.sizes = action.payload.sizes;
         state.error = null;
       })
-      .addCase(allCategories.rejected, (state, action) => {
+      .addCase(allSizes.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
       })
-      .addCase(updateCategory.pending, (state) => {
+      .addCase(updateSize.pending, (state) => {
         state.loading = true;
       })
-      .addCase(updateCategory.fulfilled, (state, action) => {
+      .addCase(updateSize.fulfilled, (state, action) => {
         state.loading = false;
-        state.categories = action.payload.categories;
+        state.sizes = action.payload.sizes;
         state.error = null;
       })
-      .addCase(updateCategory.rejected, (state, action) => {
+      .addCase(updateSize.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
       })
-      .addCase(deleteCategory.pending, (state) => {
+      .addCase(deleteSize.pending, (state) => {
         state.loading = true;
       })
-      .addCase(deleteCategory.fulfilled, (state, action) => {
+      .addCase(deleteSize.fulfilled, (state, action) => {
         state.loading = false;
-        state.categories = action.payload.categories;
+        state.sizes = action.payload.sizes;
         state.error = null;
       })
-      .addCase(deleteCategory.rejected, (state, action) => {
+      .addCase(deleteSize.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
       });
   },
 });
 
-export default categorySlice.reducer;
+export default sizeSlice.reducer;

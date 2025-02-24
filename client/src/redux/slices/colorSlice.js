@@ -54,7 +54,7 @@ export const updateColor = createAsyncThunk(
 // DELETE COLOR
 export const deleteColor = createAsyncThunk(
   "color/deleteColor",
-  async (IdleDeadline, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
         `${backendUrl}/colors/${id}`

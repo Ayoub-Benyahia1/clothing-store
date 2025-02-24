@@ -3,7 +3,7 @@ import { createSize, deleteSize, getAllSizes, updateSize } from "../controllers/
 
 const router = express.Router();
 
-router.post("/create-size", createSize);
+router.post("/add-size", createSize);
 router.get("/all-sizes", getAllSizes);
 router.patch("/update-size", updateSize);
 router.delete("/:id", deleteSize);
