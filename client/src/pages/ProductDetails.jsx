@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { StarIcon, ShoppingCartIcon } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { productById } from "@/redux/slices/productsSlice";
+import { addToCart } from "@/redux/slices/cartSlice";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -13,6 +14,11 @@ const ProductDetails = () => {
   const { loading, products } = useSelector((state) => state.products);
   const [selectedImage, setSelectedImage] = useState();
   const [quantity, setQuantity] = useState(1);
+  const handleAddToCart = () => {
+    const product = { ...products[0], quantity: quantity };
+    dispatch(addToCart(product));
+  };
+
   useEffect(() => {
     const getById = async () => {
       await dispatch(productById(id));
@@ -63,12 +69,12 @@ const ProductDetails = () => {
           </div>
           <p className="text-sm text-gray-500">
             {products[0]?.stock > 0
-              ? `En stock (${products[0]?.stock} disponibles)`
-              : "Rupture de stock"}
+              ? `In stock (${products[0]?.stock} available)`
+              : "Out of stock"}
           </p>
 
           <div className="flex items-center gap-4">
-            <label className="font-semibold">Quantité :</label>
+            <label className="font-semibold">Quantity :</label>
             <Input
               type="number"
               value={quantity}
@@ -81,16 +87,23 @@ const ProductDetails = () => {
 
           <Button
             className="w-full flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
-            disabled={products[0]?.stock === 0}
+            disabled={products[0]?.stock === 0 || products[0]?.stock < quantity}
+            onClick={handleAddToCart}
           >
-            <ShoppingCartIcon className="w-5 h-5" />
-            Ajouter au panier
+            {products[0]?.stock === 0 || products[0]?.stock < quantity ? (
+              "Out of stock"
+            ) : (
+              <>
+                <ShoppingCartIcon className="w-5 h-5" />
+                Add to cart
+              </>
+            )}
           </Button>
         </div>
       </div>
 
       <div className="mt-12 w-full md:w-[60%]">
-        <h2 className="text-2xl font-semibold mb-4">Avis des clients</h2>
+        <h2 className="text-2xl font-semibold mb-4">Customer Reviews</h2>
         {products[0]?.reviews?.length > 0 ? (
           <div className="space-y-4">
             {products[0]?.reviews?.map((review, index) => (
@@ -109,12 +122,12 @@ const ProductDetails = () => {
             ))}
           </div>
         ) : (
-          <p className="text-gray-500">Aucun avis pour ce produit.</p>
+          <p className="text-gray-500">No reviews for this product.</p>
         )}
       </div>
 
       <div className="mt-12">
-        <h2 className="text-2xl font-semibold mb-4">Produits similaires</h2>
+        <h2 className="text-2xl font-semibold mb-4">Similar products</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {products[0]?.similarProducts?.map((similar) => (
             <Card key={similar.id}>
@@ -127,7 +140,7 @@ const ProductDetails = () => {
                 <h3 className="mt-4 font-semibold">{similar.name}</h3>
                 <p className="text-blue-500 font-bold">${similar.price}</p>
                 <Button className="mt-2 w-full bg-gray-700 hover:bg-gray-800">
-                  Voir le produit
+                  View product
                 </Button>
               </CardContent>
             </Card>

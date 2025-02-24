@@ -5,12 +5,13 @@ import { checkAuth } from "./redux/slices/authSlice";
 import RedirectIfAuthenticated from "./components/RedirectIfAuthenticated";
 import { Login, Register } from "./pages/AuthPage";
 import Home from "./pages/Home";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/Footer";
 import NotFoundPage from "./pages/NotFoundPage";
 import { Toaster } from "./components/Toaster";
 import Shop from "./pages/Shop";
 import ProductDetails from "./pages/ProductDetails";
+import Cart from "./pages/Cart";
 
 const refresh = import.meta.env.VITE_INTERVAL_CHECKAUTH;
 
@@ -33,6 +34,7 @@ const App = () => {
         <Route exact path="/" element={<Home />} />
         <Route exact path="/all-products" element={<Shop />} />
         <Route exact path="/product/:name/:id" element={<ProductDetails />} />
+        <Route exact path="/cart" element={<Cart />} />
         <Route element={<RedirectIfAuthenticated />}>
           <Route path="/sign-in" element={<Login />} />
           <Route path="/sign-up" element={<Register />} />
@@ -46,4 +48,3 @@ const App = () => {
 };
 
 export default App;
-

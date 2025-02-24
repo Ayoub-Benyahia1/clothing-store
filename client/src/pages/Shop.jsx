@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import AllProducts from "@/components/AllProducts";
-import Scroll from "@/components/Scroll";
-import SortSelect from "@/components/SortSelect";
+import AllProducts from "@/components/shop/AllProducts";
+import Scroll from "@/components/shop/Scroll";
+import SortSelect from "@/components/shop/SortSelect";
 import { filterAndSort } from "@/redux/slices/productsSlice";
 
 function Shop() {

@@ -1,4 +1,4 @@
-import ProductCard from "@/components/ProductCard";
+import ProductCard from "@/components/shop/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { allProducts, specificFieldsLimit } from "@/redux/slices/productsSlice";
@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 const Home = () => {
   const dispatch = useDispatch();
   const { products } = useSelector((state) => state.products);
-  const fields = ["id", "name", "price"]
+  const fields = ["id", "name", "price"];
   useEffect(() => {
     const fetchProducts = async () => {
       await dispatch(specificFieldsLimit(fields));

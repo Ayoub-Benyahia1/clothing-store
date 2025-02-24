@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Checkbox } from "./ui/checkbox";
+import { Checkbox } from "../ui/checkbox";
 import { useSearchParams } from "react-router-dom";
 
 function CheckBoxFilter({ dataList, filterKey }) {

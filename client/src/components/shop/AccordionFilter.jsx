@@ -8,7 +8,7 @@ import {
 import CheckBoxFilter from "./CheckBoxFilter";
 import DualRangeSlider from "./DualRangeSlider";
 
-function AccordionFilter({ name, data, filterKey, updateFilters  }) {
+function AccordionFilter({ name, data, filterKey, updateFilters }) {
   return (
     <Accordion
       type="single"
