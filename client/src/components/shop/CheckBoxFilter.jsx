@@ -25,18 +25,18 @@ function CheckBoxFilter({ dataList, filterKey }) {
 
   return (
     <div>
-      {dataList.map((data) => (
-        <div key={data} className="flex items-center space-x-2">
+      {dataList.map(({id, name}) => (
+        <div key={id} className="flex items-center space-x-2">
           <Checkbox
-            id={data}
-            value={data}
-            onCheckedChange={(checked) => handleCheckboxChange(checked, data)}
+            id={id}
+            value={name}
+            onCheckedChange={(checked) => handleCheckboxChange(checked, id)}
           />
           <label
-            htmlFor={data}
+            htmlFor={name}
             className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-2"
           >
-            {data}
+            {name}
           </label>
         </div>
       ))}

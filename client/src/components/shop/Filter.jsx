@@ -6,9 +6,7 @@ import { allSizes } from "@/redux/slices/sizeSlice";
 import { allColors } from "@/redux/slices/colorSlice";
 
 function Filter({ updateFilters }) {
-  const { loading, categories, error } = useSelector(
-    (state) => state.categories
-  );
+  const { categories, error } = useSelector((state) => state.categories);
   const { sizes } = useSelector((state) => state.sizes);
   const { colors } = useSelector((state) => state.colors);
   const dispatch = useDispatch();
@@ -29,7 +27,13 @@ function Filter({ updateFilters }) {
   const labels = [
     {
       name: "Gender",
-      data: ["Men", "Women", "Girl", "Boy"],
+      data: [
+        { name: "Men", id: "men" },
+        { name: "Women", id: "women" },
+        { name: "Girl", id: "girl" },
+        { name: "Boy", id: "boy" },
+        { name: "Unisex", id: "unisex" },
+      ],
       filterKey: "gender",
     },
     {
@@ -38,29 +42,44 @@ function Filter({ updateFilters }) {
     },
     {
       name: "Category",
-      data: loading
-        ? "loading..."
-        : categories.length > 0
-        ? categories.map((category) => category.name)
-        : error,
+      data:
+        categories.length > 0
+          ? [
+              ...new Set(
+                categories.map((categorie) =>
+                  JSON.stringify({ name: categorie.name, id: categorie.id })
+                )
+              ),
+            ].map((item) => JSON.parse(item))
+          : [],
       filterKey: "category",
     },
     {
       name: "Size",
-      data: loading
-        ? "loading..."
-        : sizes.length > 0
-        ? sizes.map((size) => size.size)
-        : error,
+      data:
+        sizes.length > 0
+          ? [
+              ...new Set(
+                sizes.map((size) =>
+                  JSON.stringify({ name: size.size, id: size.id })
+                )
+              ),
+            ].map((item) => JSON.parse(item))
+          : [],
       filterKey: "size",
     },
     {
       name: "Color",
-      data: loading
-        ? "loading..."
-        : colors.length > 0
-        ? colors.map((color) => color.color)
-        : error,
+      data:
+        colors.length > 0
+          ? [
+              ...new Set(
+                colors.map((color) =>
+                  JSON.stringify({ name: color.color, id: color.id })
+                )
+              ),
+            ].map((item) => JSON.parse(item))
+          : [],
       filterKey: "color",
     },
   ];
