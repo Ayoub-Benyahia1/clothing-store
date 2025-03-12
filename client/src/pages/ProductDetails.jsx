@@ -4,14 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { StarIcon, ShoppingCartIcon } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import { productById } from "@/redux/slices/productsSlice";
 import { addToCart } from "@/redux/slices/cartSlice";
+import { useProductById } from "@/hooks/useProducts";
+import { useDispatch } from "react-redux";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { loading, products } = useSelector((state) => state.products);
+  const { data: products, isLoading, error } = useProductById(id);
+  const product = products?.[0];
   const [selectedImage, setSelectedImage] = useState();
   const [quantity, setQuantity] = useState(1);
   const handleAddToCart = () => {
@@ -20,14 +21,12 @@ const ProductDetails = () => {
   };
 
   useEffect(() => {
-    const getById = async () => {
-      await dispatch(productById(id));
-      setSelectedImage(products[0]?.images[0]);
-    };
-    getById();
-  }, [dispatch]);
+    if (products && product.images?.length > 0) {
+      setSelectedImage(product.images[0]);
+    }
+  }, [products]);
 
-  if (loading) {
+  if (isLoading) {
     return <p>Loading ......</p>;
   }
 
@@ -37,11 +36,11 @@ const ProductDetails = () => {
         <div className="flex flex-col gap-4">
           <img
             src={selectedImage}
-            alt={products[0]?.name}
+            alt={product?.name}
             className="w-full h-96 object-cover rounded-lg shadow-lg"
           />
           <div className="flex gap-2">
-            {products[0]?.images?.map((img, index) => (
+            {product?.images?.map((img, index) => (
               <img
                 key={index}
                 src={img}
@@ -56,20 +55,20 @@ const ProductDetails = () => {
         </div>
 
         <div className="flex flex-col gap-6">
-          <h1 className="text-3xl font-bold">{products[0]?.name}</h1>
-          <p className="text-gray-700">{products[0]?.description}</p>
+          <h1 className="text-3xl font-bold">{product?.name}</h1>
+          <p className="text-gray-700">{product?.description}</p>
           <div className="flex items-center gap-2">
             <span className="text-2xl font-semibold text-blue-500">
-              ${products[0]?.price}
+              ${product?.price}
             </span>
             <div className="flex items-center gap-1 text-yellow-500">
               <StarIcon className="w-5 h-5" />
-              <span>{products[0]?.rating}</span>
+              <span>{product?.rating}</span>
             </div>
           </div>
           <p className="text-sm text-gray-500">
-            {products[0]?.stock > 0
-              ? `In stock (${products[0]?.stock} available)`
+            {product?.stock > 0
+              ? `In stock (${product?.stock} available)`
               : "Out of stock"}
           </p>
 
@@ -87,10 +86,10 @@ const ProductDetails = () => {
 
           <Button
             className="w-full flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
-            disabled={products[0]?.stock === 0 || products[0]?.stock < quantity}
+            disabled={product?.stock === 0 || product?.stock < quantity}
             onClick={handleAddToCart}
           >
-            {products[0]?.stock === 0 || products[0]?.stock < quantity ? (
+            {product?.stock === 0 || product?.stock < quantity ? (
               "Out of stock"
             ) : (
               <>
@@ -104,9 +103,9 @@ const ProductDetails = () => {
 
       <div className="mt-12 w-full md:w-[60%]">
         <h2 className="text-2xl font-semibold mb-4">Customer Reviews</h2>
-        {products[0]?.reviews?.length > 0 ? (
+        {product?.reviews?.length > 0 ? (
           <div className="space-y-4">
-            {products[0]?.reviews?.map((review, index) => (
+            {product?.reviews?.map((review, index) => (
               <Card key={index}>
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
@@ -129,7 +128,7 @@ const ProductDetails = () => {
       <div className="mt-12">
         <h2 className="text-2xl font-semibold mb-4">Similar products</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {products[0]?.similarProducts?.map((similar) => (
+          {product?.similarProducts?.map((similar) => (
             <Card key={similar.id}>
               <CardContent className="p-4">
                 <img

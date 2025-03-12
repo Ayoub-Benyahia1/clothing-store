@@ -1,10 +1,8 @@
 import React from "react";
 import ProductCard from "./ProductCard";
-import { useSelector } from "react-redux";
 
-function AllProducts() {
-  const { loading, products, error } = useSelector((state) => state.products);
-  if (loading) {
+function AllProducts({ products, isLoading, error }) {
+  if (isLoading) {
     return <p className="text-center text-gray-500">Loading...</p>;
   }
 
@@ -18,7 +16,9 @@ function AllProducts() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {products?.map((product) => (
-        <ProductCard product={product} />
+        <div key={product.id}>
+          <ProductCard product={product} />
+        </div>
       ))}
     </div>
   );

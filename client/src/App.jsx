@@ -12,6 +12,7 @@ import { Toaster } from "./components/Toaster";
 import Shop from "./pages/Shop";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
+import AuthRoutes from "./AuthRoutes";
 
 const refresh = import.meta.env.VITE_INTERVAL_CHECKAUTH;
 
@@ -35,6 +36,7 @@ const App = () => {
         <Route exact path="/all-products" element={<Shop />} />
         <Route exact path="/product/:name/:id" element={<ProductDetails />} />
         <Route exact path="/cart" element={<Cart />} />
+        <Route path="/user/*" element={<AuthRoutes />} />
         <Route element={<RedirectIfAuthenticated />}>
           <Route path="/sign-in" element={<Login />} />
           <Route path="/sign-up" element={<Register />} />

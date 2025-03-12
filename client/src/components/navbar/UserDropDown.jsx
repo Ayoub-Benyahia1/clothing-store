@@ -50,9 +50,16 @@ function UserDropDown({ isAuthenticated, user }) {
         <DropdownMenuContent>
           <DropdownMenuLabel>Welcome {user?.name || user}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="cursor-pointer">
-            Profile
-          </DropdownMenuItem>
+          <Link to="/user/dashboard">
+            <DropdownMenuItem className="cursor-pointer">
+              Dashboard
+            </DropdownMenuItem>
+          </Link>
+          <Link to="/user/profile">
+            <DropdownMenuItem className="cursor-pointer">
+              Profile
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuItem className="cursor-pointer">
             My orders
           </DropdownMenuItem>

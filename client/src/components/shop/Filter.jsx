@@ -1,29 +1,36 @@
-import React, { useEffect } from "react";
+import React from "react";
 import AccordionFilter from "./AccordionFilter";
-import { useDispatch, useSelector } from "react-redux";
-import { allCategories } from "@/redux/slices/categorySlice";
-import { allSizes } from "@/redux/slices/sizeSlice";
-import { allColors } from "@/redux/slices/colorSlice";
+import { useSizes } from "@/hooks/useSize";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+// Function to retrieve categories
+const fetchCategories = async () => {
+  const response = await axios.get(`${backendUrl}/categories/all-categories`);
+  return response.data.categories;
+};
+
+// Function to retrieve colors
+const fetchColors = async () => {
+  const response = await axios.get(`${backendUrl}/colors/all-colors`);
+  return response.data.colors;
+};
 
 function Filter({ updateFilters }) {
-  const { categories, error } = useSelector((state) => state.categories);
-  const { sizes } = useSelector((state) => state.sizes);
-  const { colors } = useSelector((state) => state.colors);
-  const dispatch = useDispatch();
-  const fetchCategories = async () => {
-    await dispatch(allCategories());
-  };
-  const fetchSizes = async () => {
-    await dispatch(allSizes());
-  };
-  const fetchColors = async () => {
-    await dispatch(allColors());
-  };
-  useEffect(() => {
-    fetchCategories();
-    fetchSizes();
-    fetchColors();
-  }, [dispatch]);
+  const { data: categories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+  });
+
+  const { data: sizes = [] } = useSizes();
+
+  const { data: colors = [] } = useQuery({
+    queryKey: ["colors"],
+    queryFn: fetchColors,
+  });
+
   const labels = [
     {
       name: "Gender",
@@ -42,44 +49,26 @@ function Filter({ updateFilters }) {
     },
     {
       name: "Category",
-      data:
-        categories.length > 0
-          ? [
-              ...new Set(
-                categories.map((categorie) =>
-                  JSON.stringify({ name: categorie.name, id: categorie.id })
-                )
-              ),
-            ].map((item) => JSON.parse(item))
-          : [],
+      data: categories.map((categorie) => ({
+        name: categorie.name,
+        id: categorie.id,
+      })),
       filterKey: "category",
     },
     {
       name: "Size",
-      data:
-        sizes.length > 0
-          ? [
-              ...new Set(
-                sizes.map((size) =>
-                  JSON.stringify({ name: size.size, id: size.id })
-                )
-              ),
-            ].map((item) => JSON.parse(item))
-          : [],
+      data: sizes.map((size) => ({
+        name: size.size,
+        id: size.id,
+      })),
       filterKey: "size",
     },
     {
       name: "Color",
-      data:
-        colors.length > 0
-          ? [
-              ...new Set(
-                colors.map((color) =>
-                  JSON.stringify({ name: color.color, id: color.id })
-                )
-              ),
-            ].map((item) => JSON.parse(item))
-          : [],
+      data: colors.map((color) => ({
+        name: color.color,
+        id: color.id,
+      })),
       filterKey: "color",
     },
   ];

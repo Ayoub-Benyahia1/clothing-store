@@ -9,9 +9,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-function SortSelect({ onSortChange, queryString }) {
+function SortSelect({ onSortChange, selectedSort }) {
   return (
-    <Select onValueChange={onSortChange} value={queryString}>
+    <Select onValueChange={onSortChange} value={selectedSort}>
       <SelectTrigger className="w-[200px]">
         <SelectValue placeholder="Sort by" />
       </SelectTrigger>

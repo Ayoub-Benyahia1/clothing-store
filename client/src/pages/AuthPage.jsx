@@ -26,7 +26,7 @@ const AuthPage = ({ type }) => {
           title: "Success!",
           description: "You have successfully sign in!",
         });
-        navigate("/dashboard");
+        navigate("/user/dashboard");
       } catch (err) {
         toast({
           variant: "destructive",

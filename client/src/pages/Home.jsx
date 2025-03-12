@@ -1,22 +1,13 @@
 import ProductCard from "@/components/shop/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { allProducts, specificFieldsLimit } from "@/redux/slices/productsSlice";
+import { useSpecificFieldsLimit } from "@/hooks/useProducts";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Home = () => {
-  const dispatch = useDispatch();
-  const { products } = useSelector((state) => state.products);
   const fields = ["id", "name", "price"];
-  useEffect(() => {
-    const fetchProducts = async () => {
-      await dispatch(specificFieldsLimit(fields));
-    };
-    fetchProducts();
-  }, [dispatch]);
+  const { data: products, isLoading, error } = useSpecificFieldsLimit(fields)
 
   return (
     <div className="container mx-auto px-4 flex justify-center">
@@ -45,7 +36,7 @@ const Home = () => {
             Featured Clothing
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {products?.map((product) => (
+            {isLoading ? <p>Loading ....</p> : products?.map((product) => (
               <div key={product.id}>
                 <ProductCard product={product} />
               </div>
